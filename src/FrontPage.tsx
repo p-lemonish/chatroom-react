@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Button, Container, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-function App() {
+function FrontPage() {
     const [username, setUsername] = useState("");
+    const navigate = useNavigate();
 
     const handleUsernameChange = (e: any) => {
         setUsername(e.target.value);
@@ -14,8 +16,11 @@ function App() {
                 method: "POST",
                 body: JSON.stringify({ username: username })
             });
-            console.log(response.status);
-            setUsername("");
+            if (response.ok) {
+                navigate("/main", { state: { username: username } });
+            } else {
+                alert("Something went wrong, try again");
+            }
         } catch (err) {
             console.error(err);
         }
@@ -57,4 +62,4 @@ function App() {
     );
 }
 
-export default App;
+export default FrontPage;
