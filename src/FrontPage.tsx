@@ -17,7 +17,11 @@ function FrontPage() {
                 body: JSON.stringify({ username: username })
             });
             if (response.ok) {
-                navigate("/main", { state: { username: username } });
+                navigate("/main", {
+                    state: {
+                        username: username,
+                    }
+                });
             } else {
                 alert("Something went wrong, try again");
             }

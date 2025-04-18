@@ -1,28 +1,31 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import { WebSocketMessage } from "react-use-websocket/dist/lib/types";
 
 function MainPage() {
 
     const socketUrl = 'ws://localhost:8080/main';
-
     const {
-        sendMessage,
         sendJsonMessage,
         lastMessage,
-        lastJsonMessage,
         readyState,
-        getWebSocket,
     } = useWebSocket(socketUrl, {
-        onOpen: () => console.log('opened'),
         //Will attempt to reconnect on all close events, such as server shutting down
-        shouldReconnect: (closeEvent) => true,
+        shouldReconnect: () => true,
+        onOpen: (() => {
+            sendJsonMessage({
+                type: "auth",
+                username: username + "_supersecretmessage",
+                text: "hello server",
+            });
+        }),
     });
     const location = useLocation();
     const username = location.state?.username;
-
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
+    const [message, setMessage] = useState<WebSocketMessage>("");
 
     useEffect(() => {
         if (lastMessage !== null) {
@@ -30,7 +33,14 @@ function MainPage() {
         }
     }, [lastMessage]);
 
-    const handleClickSendMessage = useCallback(() => sendMessage('Hello'), []);
+    const handleClickSendMessage = useCallback(() => {
+        sendJsonMessage({
+            type: "message",
+            username: username,
+            text: message,
+        });
+        setMessage("");
+    }, [message]);
 
     const connectionStatus = {
         [ReadyState.CONNECTING]: 'Connecting',
@@ -39,6 +49,10 @@ function MainPage() {
         [ReadyState.CLOSED]: 'Closed',
         [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
     }[readyState];
+
+    function handleMessageChange(event: any) {
+        setMessage(event.target.value);
+    }
 
     return (
         <Container
@@ -50,24 +64,18 @@ function MainPage() {
                 paddingBottom: '20px',
                 paddingTop: '20px',
             }}>
-            <Typography variant="h1">
-                Welcome to the Main page, {username}
-            </Typography>
-            <Typography>
-                The websocket is currently {connectionStatus}
+            <Typography variant="h4">
+                Welcome to the Main page (Connection status: {connectionStatus})
             </Typography>
             <Box height={'100vh'}>
-                {lastMessage ?
-                    <Typography>
-                        Last message: {lastMessage.data}
-                    </Typography>
-                    : null}
                 {messageHistory.map((message: any, idx: any) => (
                     <Typography key={idx}>
                         {message ? message.data : null}
                     </Typography>
                 ))}
             </Box>
+            <TextField variant='outlined' value={message} onChange={handleMessageChange}>
+            </TextField>
             <Button variant='contained' onClick={handleClickSendMessage}>
                 Chat!
             </Button>
