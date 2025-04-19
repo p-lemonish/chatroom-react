@@ -4,6 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import FrontPage from './FrontPage.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import MainPage from './MainPage.tsx';
+import Chatroom from './Chatroom.tsx';
 
 const router = createBrowserRouter([
     {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
     {
         path: "/main",
         element: <MainPage />
+    },
+    {
+        path: "/chat/:room",
+        element: <Chatroom />
     },
 ]);
 
