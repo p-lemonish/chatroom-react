@@ -27,10 +27,11 @@ function MainPage() {
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
     const [message, setMessage] = useState<WebSocketMessage>("");
     const messageEndRef = useRef<null | HTMLDivElement>(null);
+    const MAXMESSAGESIZE = 200;
 
     useEffect(() => {
         if (lastMessage !== null) {
-            setMessageHistory((prev: any) => prev.concat(lastMessage));
+            setMessageHistory((prev: any) => [lastMessage, ...prev.slice(0, MAXMESSAGESIZE)]);
         }
     }, [lastMessage]);
 
@@ -73,7 +74,7 @@ function MainPage() {
                 paddingTop: '20px',
             }}>
             <Typography variant="h4">
-                Welcome to the Main page (Connection status: {connectionStatus})
+                Welcome to the Main chat (Connection status: {connectionStatus})
             </Typography>
             <Box
                 height={'100vh'}
@@ -83,11 +84,9 @@ function MainPage() {
                 sx={{ overflowY: 'scroll' }}
             >
                 {messageHistory.map((message: any, idx: any) => (
-                    <>
-                        <Typography key={idx}>
-                            {message ? message.data : null}
-                        </Typography>
-                    </>
+                    <Typography key={idx}>
+                        {message ? message.data : null}
+                    </Typography>
                 ))}
                 <div ref={messageEndRef} />
             </Box>
