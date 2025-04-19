@@ -9,6 +9,7 @@ function FrontPage() {
     const handleUsernameChange = (e: any) => {
         setUsername(e.target.value);
     };
+
     const handleSubmitUsername = async () => {
         const url = "http://localhost:8080/start";
         try {
@@ -29,6 +30,7 @@ function FrontPage() {
             console.error(err);
         }
     };
+
     return (
         <Container
             maxWidth="lg"
@@ -45,7 +47,6 @@ function FrontPage() {
             <Typography variant='h3'>
                 Welcome! Type a username to start chatting.
             </Typography>
-
             <Typography variant="h5" sx={{ mt: 4 }}>
                 Change Password
             </Typography>

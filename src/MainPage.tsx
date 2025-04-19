@@ -1,5 +1,5 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { WebSocketMessage } from "react-use-websocket/dist/lib/types";
@@ -26,12 +26,20 @@ function MainPage() {
     const username = location.state?.username;
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
     const [message, setMessage] = useState<WebSocketMessage>("");
+    const messageEndRef = useRef<null | HTMLDivElement>(null);
 
     useEffect(() => {
         if (lastMessage !== null) {
             setMessageHistory((prev: any) => prev.concat(lastMessage));
         }
     }, [lastMessage]);
+
+    useEffect(() => {
+        const scrollToBottom = () => {
+            messageEndRef.current?.scrollIntoView({ behavior: "instant", block: "end" });
+        };
+        scrollToBottom();
+    }, [messageHistory]);
 
     const handleClickSendMessage = useCallback(() => {
         sendJsonMessage({
@@ -67,12 +75,21 @@ function MainPage() {
             <Typography variant="h4">
                 Welcome to the Main page (Connection status: {connectionStatus})
             </Typography>
-            <Box height={'100vh'}>
+            <Box
+                height={'100vh'}
+                justifyContent={'flex-end'}
+                alignItems={'flex-start'}
+                flexDirection={'column'}
+                sx={{ overflowY: 'scroll' }}
+            >
                 {messageHistory.map((message: any, idx: any) => (
-                    <Typography key={idx}>
-                        {message ? message.data : null}
-                    </Typography>
+                    <>
+                        <Typography key={idx}>
+                            {message ? message.data : null}
+                        </Typography>
+                    </>
                 ))}
+                <div ref={messageEndRef} />
             </Box>
             <TextField variant='outlined' value={message} onChange={handleMessageChange}>
             </TextField>
