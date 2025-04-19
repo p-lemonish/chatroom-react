@@ -3,7 +3,7 @@ import { Button, Container, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 function FrontPage() {
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState<string>("");
     const navigate = useNavigate();
 
     const handleUsernameChange = (e: any) => {
