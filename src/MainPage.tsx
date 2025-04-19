@@ -6,6 +6,13 @@ import { WebSocketMessage } from "react-use-websocket/dist/lib/types";
 
 function MainPage() {
 
+    // TODOs
+    // - current contents of this component to be reused as component for chatrooms generally
+    // - mainpage for joining/creating chats, there should always be the main chat avaialble by default
+    // - sidepanel for navigating/creating chatrooms
+    // - ui work, would like to see the chat interface looking more like a terminal? for example the TextField
+    //      for building the message could look like ->  username > messagehere, kind of oldschool look?
+
     const socketUrl = 'ws://localhost:8080/main';
     const {
         sendJsonMessage,
@@ -17,7 +24,7 @@ function MainPage() {
         onOpen: (() => {
             sendJsonMessage({
                 type: "auth",
-                username: username + "_supersecretmessage",
+                username: username + "_supersecretmessage", // this could be a request to the backend to send a jwt as well.
                 text: "hello server",
             });
         }),
