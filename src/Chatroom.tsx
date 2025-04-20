@@ -1,10 +1,14 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { WebSocketMessage } from "react-use-websocket/dist/lib/types";
 
-function Chatroom() {
+type ChatroomProps = {
+    roomname: string;
+};
+
+function Chatroom({ roomname }: ChatroomProps) {
 
     // TODOs
     // - current contents of this component to be reused as component for chatrooms generally
@@ -13,7 +17,7 @@ function Chatroom() {
     // - ui work, would like to see the chat interface looking more like a terminal? for example the TextField
     //      for building the message could look like ->  username > messagehere, kind of oldschool look?
 
-    const socketUrl = 'ws://localhost:8080/main';
+    const socketUrl = 'ws://localhost:8080/chat';
     const {
         sendJsonMessage,
         lastMessage,
@@ -23,25 +27,23 @@ function Chatroom() {
         shouldReconnect: () => true,
         onOpen: (() => {
             sendJsonMessage({
-                type: "auth",
-                username: username + "_supersecretmessage", // this could be a request to the backend to send a jwt as well.
-                chatName: chatName,
+                type: "message",
+                username: username,
+                roomname: roomname,
                 text: "hello server",
             });
         }),
     });
-    let params = useParams();
-    const chatName = params.room;
     const location = useLocation();
-    const username = location.state?.username;
+    const [username, setUsername] = useState(location.state?.username);
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
     const [message, setMessage] = useState<WebSocketMessage>("");
     const messageEndRef = useRef<null | HTMLDivElement>(null);
-    const MAXMESSAGESIZE = 200;
+    const MAXMESSAGEAMOUNT = 200;
 
     useEffect(() => {
         if (lastMessage !== null) {
-            setMessageHistory((prev: any) => [lastMessage, ...prev.slice(0, MAXMESSAGESIZE)]);
+            setMessageHistory((prev: any) => [...prev.slice(0, MAXMESSAGEAMOUNT), lastMessage]);
         }
     }, [lastMessage]);
 
@@ -79,19 +81,20 @@ function Chatroom() {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100vh',
-                paddingBottom: '20px',
-                paddingTop: '20px',
+                height: '100%',
+                paddingTop: 2,
             }}>
-            <Typography variant="h4">
-                Welcome to {chatName} (Connection status: {connectionStatus})
+            <Typography variant="h6">
+                Joined room: {roomname} (Connection status: {connectionStatus})
             </Typography>
             <Box
-                height={'100vh'}
-                justifyContent={'flex-end'}
-                alignItems={'flex-start'}
-                flexDirection={'column'}
-                sx={{ overflowY: 'auto' }}
+                sx={{
+                    flexGrow: 1,
+                    minHeight: 0,
+                    overflowY: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
             >
                 {messageHistory.map((message: any, idx: any) => (
                     <Typography key={idx}>
