@@ -1,70 +1,54 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import useWebSocket, { ReadyState } from "react-use-websocket";
-import { WebSocketMessage } from "react-use-websocket/dist/lib/types";
+import Chatroom from "./Chatroom";
 
 function MainPage() {
     const location = useLocation();
     const username = location.state?.username;
-    const [rooms, setRooms] = useState<string[]>([]);
-    const roonmsUrl = "http://localhost:8080/rooms";
+    const [roomname, setRoomname] = useState("");
+    const [joinName, setJoinName] = useState("main");
 
-    const getAvailableRooms = async () => {
-        try {
-            const response = await fetch(roonmsUrl);
-            const json = await response.json();
-            if (response.ok) {
-                setRooms(json.rooms);
-            }
-        } catch (err) {
-            console.error(err);
-        }
+    const handleJoin = () => {
+        setJoinName(roomname);
     };
+
+    function handleRoomnameChange(event: any): void {
+        setRoomname(event.target.value);
+    }
 
     return (
         <Container
             maxWidth="lg"
+            disableGutters
             sx={{
+                height: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100vh',
-                paddingBottom: '20px',
-                paddingTop: '20px',
             }}>
-            <Typography variant="h3">
-                Welcome to the Main page, {username}.
-            </Typography>
-            <Typography variant="h5">
-                Choose a room to join or create your own!
-            </Typography>
-            <Box
-                height={'100vh'}
-                justifyContent={'flex-end'}
-                alignItems={'flex-start'}
-                flexDirection={'column'}
-                sx={{ overflowY: 'auto' }}
-            >
-                {rooms.length !== 0 ?
-                    (
-                        rooms.map((roomName: any, idx: any) => (
-                            <Typography key={idx}>
-                                {roomName ? (
-                                    roomName.data + " join"
-                                ) : (
-                                    "Unnamed room"
-                                )}
-                            </Typography>
-                        ))
-                    ) : (
-                        <Typography>
-                            No rooms yet, create one!
-                        </Typography>
-                    )
-                }
+            <Box sx={{ flexShrink: 0, paddingTop: 2 }}>
+                <Typography variant="h5">
+                    Time to start chatting, {username}!
+                </Typography>
+                <Typography>
+                    Choose a room to join or create your own!
+                </Typography>
+                <Box>
+                    <TextField
+                        variant="outlined"
+                        value={roomname}
+                        onChange={handleRoomnameChange}
+                        placeholder="Enter a room name"
+                    />
+                    <Button variant="contained" onClick={handleJoin}>
+                        Join
+                    </Button>
+                </Box>
             </Box>
-
+            <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+                <Chatroom key={joinName} roomname={joinName} />
+            </Box>
         </Container>
     );
 }
-export default MainPage;
+export default MainPage; 
