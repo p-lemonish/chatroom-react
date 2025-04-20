@@ -15,16 +15,20 @@ function FrontPage() {
         try {
             const response = await fetch(url, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({ username: username })
             });
             if (response.ok) {
-                navigate("/main", {
+                const data = await response.json();
+                navigate("/chat", {
                     state: {
-                        username: username,
+                        username: data,
                     }
                 });
             } else {
-                alert("Something went wrong, try again");
+                alert("The name could be in use. Try again.");
             }
         } catch (err) {
             console.error(err);
