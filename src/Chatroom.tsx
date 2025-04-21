@@ -2,7 +2,6 @@ import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { WebSocketMessage } from "react-use-websocket/dist/lib/types";
 
 type ChatroomProps = {
     roomname: string;
@@ -34,7 +33,7 @@ function Chatroom({ roomname }: ChatroomProps) {
     const location = useLocation();
     const username = location.state?.username;
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
-    const [message, setMessage] = useState<WebSocketMessage>("");
+    const [message, setMessage] = useState<string>("");
     const messageEndRef = useRef<null | HTMLDivElement>(null);
     const MAXMESSAGEAMOUNT = 200;
 
@@ -102,7 +101,10 @@ function Chatroom({ roomname }: ChatroomProps) {
             </Box>
             <TextField variant='outlined' value={message} onChange={handleMessageChange}>
             </TextField>
-            <Button variant='contained' onClick={handleClickSendMessage}>
+            <Button variant='contained' onClick={() => {
+                console.log(message);
+                message.length > 0 ? handleClickSendMessage() : alert("Message can't be empty");
+            }}>
                 Chat!
             </Button>
         </Container >
