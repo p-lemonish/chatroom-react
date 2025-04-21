@@ -11,9 +11,6 @@ type ChatroomProps = {
 function Chatroom({ roomname }: ChatroomProps) {
 
     // TODOs
-    // - current contents of this component to be reused as component for chatrooms generally
-    // - mainpage for joining/creating chats, there should always be the main chat avaialble by default
-    // - sidepanel for navigating/creating chatrooms
     // - ui work, would like to see the chat interface looking more like a terminal? for example the TextField
     //      for building the message could look like ->  username > messagehere, kind of oldschool look?
 
@@ -35,7 +32,7 @@ function Chatroom({ roomname }: ChatroomProps) {
         }),
     });
     const location = useLocation();
-    const [username, setUsername] = useState(location.state?.username);
+    const username = location.state?.username;
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
     const [message, setMessage] = useState<WebSocketMessage>("");
     const messageEndRef = useRef<null | HTMLDivElement>(null);

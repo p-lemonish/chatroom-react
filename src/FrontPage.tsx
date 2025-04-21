@@ -24,7 +24,7 @@ function FrontPage() {
                 const data = await response.json();
                 navigate("/chat", {
                     state: {
-                        username: data,
+                        username: data.Username,
                     }
                 });
             } else {
