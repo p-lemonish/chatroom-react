@@ -99,8 +99,21 @@ function Chatroom({ roomname }: ChatroomProps) {
                 ))}
                 <div ref={messageEndRef} />
             </Box>
-            <TextField variant='outlined' value={message} onChange={handleMessageChange}>
-            </TextField>
+            <TextField
+                variant="outlined"
+                value={message}
+                onChange={handleMessageChange}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (message.length > 0) {
+                            handleClickSendMessage();
+                        } else {
+                            alert("Message can't be empty");
+                        }
+                    }
+                }}
+            />
             <Button variant='contained' onClick={() => {
                 message.length > 0 ? handleClickSendMessage() : alert("Message can't be empty");
             }}>

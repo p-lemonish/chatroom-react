@@ -10,11 +10,7 @@ function MainPage() {
     const [joinName, setJoinName] = useState("main");
 
     const handleJoin = () => {
-        if (roomname.length > 0) {
-            setJoinName(roomname);
-        } else {
-            setJoinName("main");
-        }
+        setJoinName(roomname.trim() !== "" ? roomname : "main");
         setRoomname("");
     };
 
@@ -44,6 +40,12 @@ function MainPage() {
                         value={roomname}
                         onChange={handleRoomnameChange}
                         placeholder="Enter a room name"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleJoin();
+                            }
+                        }}
                     />
                     <Button variant="contained" onClick={handleJoin}>
                         Join

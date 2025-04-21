@@ -63,6 +63,12 @@ function FrontPage() {
                 variant="filled"
                 value={username}
                 onChange={handleUsernameChange}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleSubmitUsername();
+                    }
+                }}
             />
             <Button variant='contained' onClick={handleSubmitUsername}>
                 Chat!
