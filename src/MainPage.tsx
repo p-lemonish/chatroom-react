@@ -1,5 +1,5 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Chatroom from "./Chatroom";
 
@@ -10,7 +10,12 @@ function MainPage() {
     const [joinName, setJoinName] = useState("main");
 
     const handleJoin = () => {
-        setJoinName(roomname);
+        if (roomname.length > 0) {
+            setJoinName(roomname);
+        } else {
+            setJoinName("main");
+        }
+        setRoomname("");
     };
 
     function handleRoomnameChange(event: any): void {
