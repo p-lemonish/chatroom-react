@@ -102,7 +102,6 @@ function Chatroom({ roomname }: ChatroomProps) {
             <TextField variant='outlined' value={message} onChange={handleMessageChange}>
             </TextField>
             <Button variant='contained' onClick={() => {
-                console.log(message);
                 message.length > 0 ? handleClickSendMessage() : alert("Message can't be empty");
             }}>
                 Chat!
