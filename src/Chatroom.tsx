@@ -13,7 +13,9 @@ function Chatroom({ roomname }: ChatroomProps) {
     // - ui work, would like to see the chat interface looking more like a terminal? for example the TextField
     //      for building the message could look like ->  username > messagehere, kind of oldschool look?
 
-    const socketUrl = 'ws://18.192.11.118:8080/chat';
+    const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//` +
+        `${window.location.host}${import.meta.env.VITE_WS_PATH}`;
+    const socketUrl = wsUrl;
     const {
         sendJsonMessage,
         lastMessage,
