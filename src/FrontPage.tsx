@@ -51,9 +51,6 @@ function FrontPage() {
             <Typography variant='h3'>
                 Welcome! Type a username to start chatting.
             </Typography>
-            <Typography variant="h5" sx={{ mt: 4 }}>
-                Change Password
-            </Typography>
             <TextField
                 required
                 type='text'
