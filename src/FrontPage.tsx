@@ -11,7 +11,7 @@ function FrontPage() {
     };
 
     const handleSubmitUsername = async () => {
-        const url = "http://chatroom-backend:8080/start";
+        const url = "http://100.27.185.143:8080/start";
         try {
             const response = await fetch(url, {
                 method: "POST",
