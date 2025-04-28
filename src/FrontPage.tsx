@@ -3,7 +3,7 @@ import { Button, Container, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 function FrontPage() {
-    const apiUrl = `${import.meta.env.VITE_API_BASE}`;
+    const apiUrl = ""; // placeholder for now, can be used for setting dev/stage/prod url later
     const [username, setUsername] = useState<string>("");
     const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ function FrontPage() {
     };
 
     const handleSubmitUsername = async () => {
-        const url = apiUrl + "/start";
+        const url = `${apiUrl}/start`;
         try {
             const response = await fetch(url, {
                 method: "POST",
