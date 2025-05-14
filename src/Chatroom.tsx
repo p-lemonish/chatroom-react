@@ -87,11 +87,12 @@ function Chatroom({ roomname }: ChatroomProps) {
 
   return (
     <Container
-      maxWidth="lg"
+      maxWidth="md"
       sx={{
         display: "flex",
         flexDirection: "column",
         height: "100%",
+        maxHeight: 600,
         paddingTop: 2,
       }}
     >
